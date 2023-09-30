@@ -1,7 +1,7 @@
 import express from 'express'
 import sqlite3, { Statement } from 'sqlite3'
 import { open, Database } from 'sqlite'
-
+import cors from 'cors'
 // todo proper db input to routes
 let db: Database<sqlite3.Database, Statement>
 // this is a top-level await
@@ -16,6 +16,7 @@ let db: Database<sqlite3.Database, Statement>
 
 
 const app = express()
+app.use(cors()) // todo: limit to dev only environments
 const port = parseInt(process.env.PORT || '3000')
 const PREFIX = '/api/v1/'
 // auth would be nice
@@ -66,7 +67,7 @@ app.get(`${PREFIX}display-findings/:grouped_finding_id`, async (req, res) => {
   })
 })
 
-app.get(`${PREFIX}diplay-grouped-findings-counts`, async (_, res) => {
+app.get(`${PREFIX}display-grouped-findings-counts`, async (_, res) => {
   const data = await db.all(`SELECT
     severity,
     COUNT(*) as count
@@ -78,8 +79,20 @@ app.get(`${PREFIX}diplay-grouped-findings-counts`, async (_, res) => {
   })
 })
 
-app.listen(port, '0.0.0.0', () => {
+const server = app.listen(port, '0.0.0.0', () => {
   console.log(`server running on port ${port}`)
 })
+
+process.on('SIGTERM', async () => {
+  await db.close()
+
+  server.close(() => {
+    console.log('HTTP server closed')
+  })
+})
+process.on('SIGINT', function () {
+  process.exit()
+})
+
 
 // todo: on shutdown db.close()
