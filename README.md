@@ -1,9 +1,9 @@
 simon ramsay silk security take home test
 
 how to run
-1. install docker-compose
-2. docker-compose up
-3. goto http://localhost:8080/
+1. [install docker-compose](https://docs.docker.com/compose/install/)
+2. ```docker-compose up```
+3. goto [http://localhost:8080/](http://localhost:8080/)
 
 
 
