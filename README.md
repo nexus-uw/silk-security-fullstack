@@ -4,8 +4,8 @@ how to run
 1. [install docker-compose](https://docs.docker.com/compose/install/)
 2. ```docker-compose up```
 3. goto [http://localhost:8080/](http://localhost:8080/)
-
-
+![](https://github.com/nexus-uw/silk-security-fullstack/blob/master/Screenshot%202023-10-01%20at%2014-10-05%20React%20App.png)
+![](https://github.com/nexus-uw/silk-security-fullstack/blob/master/Screenshot%202023-10-01%20at%2014-10-38%20React%20App.png)
 
 client things todo
 1. ~~make it look nice~~
