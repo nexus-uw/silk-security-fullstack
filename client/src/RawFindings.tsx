@@ -1,26 +1,44 @@
 import Table from 'rc-table'
 import React, { useEffect } from 'react'
 import { API_URL, severityToColor } from './common'
-
+import './RawFindings.css'
+import { LoadingMessage } from './LoadingMessage'
+import { ErrorMessage } from './ErrorMessage'
 declare type RawFinding = any // todo types
 
 export const RawFindings = ({ groupedFindingsId }: { groupedFindingsId: string }) => {
   const [data, setData] = React.useState([] as RawFinding[])
+  const [loadingState, setLoadingState] = React.useState({ loading: false, error: false })
 
   useEffect(() => {
+    setLoadingState({ loading: true, error: false })
     async function fun() {
-      const response = await fetch(`${API_URL}display-findings/${groupedFindingsId}`)
-      const { data } = await response.json()
 
-      setData(data)
+      try {
+        const response = await fetch(`${API_URL}display-findings/${groupedFindingsId}`)
+        const { data } = await response.json()
+
+        setData(data)
+        setLoadingState({ loading: false, error: false })
+      } catch (e) {
+        console.error('failed to load raw findings: ' + e)
+        setLoadingState({ loading: false, error: true })
+      }
+
     }
     fun()
 
-  }, [])
+  }, [groupedFindingsId])
+
+  if (loadingState.loading) {
+    return <LoadingMessage></LoadingMessage>
+  } else if (loadingState.error) {
+    return <ErrorMessage></ErrorMessage>
+  }
 
   return (
     <Table
-      caption="Raw Findings"
+      caption={`Raw Findings: ${groupedFindingsId}`}
       columns={[{
         title: 'Id',
         dataIndex: 'id',
@@ -89,6 +107,7 @@ export const RawFindings = ({ groupedFindingsId }: { groupedFindingsId: string }
       ]}
 
       data={data.map(f => ({ ...f, key: f.id }))}
+      className="raw"
     ></Table >
   )
 

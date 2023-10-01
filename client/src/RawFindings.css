@@ -1,0 +1,7 @@
+.raw .rc-table-cell {
+  border: 1px solid green
+}
+
+.raw .rc-table-row:nth-child(odd) {
+  background-color: #80008029;
+}

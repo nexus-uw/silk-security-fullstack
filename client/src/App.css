@@ -1,0 +1,19 @@
+.rc-table table {
+  border-spacing: 0px;
+}
+
+.rc-table-cell {
+  border: 1px solid #0000003d
+}
+
+.rc-table-row:nth-child(odd) {
+  background-color: #e1e1e1;
+}
+
+.rc-table-row:hover {
+  background-color: lightblue;
+}
+
+.App {
+  padding: 9px;
+}

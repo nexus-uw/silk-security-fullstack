@@ -3,12 +3,16 @@ import React, { useEffect } from 'react'
 import { Line } from 'rc-progress'
 import { API_URL, severityToColor } from './common'
 import { RawFindings } from './RawFindings'
+import { LoadingMessage } from './LoadingMessage'
+import { ErrorMessage } from './ErrorMessage'
 
 declare type GroupedFindings = any // todo better typings
 
 export const GroupedFindingsTable = () => {
   const [groupedFindings, setGroupedFindings] = React.useState([] as GroupedFindings[])
   const [expandedRowKeys, setExpandedRowKeys] = React.useState([])
+  const [loadingState, setLoadingState] = React.useState({ loading: false, error: false })
+
   function CustomExpandIcon(props: any) {
     let text
     if (props.expanded) {
@@ -29,28 +33,39 @@ export const GroupedFindingsTable = () => {
     )
   }
 
-  const onExpand = (expanded: any, record: any) => {
-    // eslint-disable-next-line no-console
-    console.log('onExpand', expanded, record)
-
-  }
-
   const onExpandedRowsChange = (rows: readonly React.Key[]) => {
     setExpandedRowKeys(rows as any)
   }
   useEffect(() => {
-    async function fun() {
-      const response = await fetch(`${API_URL}display-grouped-findings`)
-      const { data } = await response.json()
+    setLoadingState({ loading: true, error: false })
 
-      setGroupedFindings(data)
+    async function fun() {
+      try {
+        const response = await fetch(`${API_URL}display-grouped-findings`)
+        const { data } = await response.json()
+
+        setGroupedFindings(data)
+        setLoadingState({ loading: false, error: false })
+      } catch (e) {
+        setLoadingState({ loading: false, error: true })
+        console.error('failed to load grouped findings ' + e)
+
+      }
+
     }
     fun()
 
   }, [])
+
+  if (loadingState.loading) {
+    return <LoadingMessage></LoadingMessage>
+  } else if (loadingState.error) {
+    return <ErrorMessage></ErrorMessage>
+  }
+
   return (
     <Table
-      caption="Grouped Findings"
+
       columns={[{
         title: 'Id',
         dataIndex: 'id',
@@ -132,7 +147,6 @@ export const GroupedFindingsTable = () => {
         onExpandedRowsChange,
         expandedRowRender: (record, index, indent, expanded) =>
           expanded ? <RawFindings groupedFindingsId={record.id} ></RawFindings> : null,
-        onExpand,
         expandIcon: CustomExpandIcon,
       }}
       data={groupedFindings.map(f => ({ ...f, key: f.id }))}

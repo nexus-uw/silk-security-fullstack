@@ -8,9 +8,10 @@ how to run
 
 
 client things todo
-1. make it look nice
-2. loading state + error states
-3. consume/implement stuff from the server todo list
+1. ~~make it look nice~~
+2. make it look nicer. use a started react dashboard template library ? (or maybe just grafana)
+3. ~~loading state + error states~~
+4. consume/implement stuff from the server todo list
 
 server things todo
 1. strongly type api contract
@@ -22,4 +23,4 @@ server things todo
 7. health check
 8. unit + integ tests
 9. slim down docker container by using build container
-10. paginate server responses
+10.  sort + filter + paginate server responses

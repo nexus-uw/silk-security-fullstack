@@ -1,0 +1,1 @@
+export const ErrorMessage = () => <div style={{ color: 'red' }}>ERROR: failed to load!</div>
